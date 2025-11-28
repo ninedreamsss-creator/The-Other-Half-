@@ -1,14 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  ArrowRight, X, Fingerprint, Zap, Layers, Cpu, Anchor, Target, Box, Share2, 
-  Play, Terminal, FileText, CheckCircle2, ChevronRight, MessageSquare, Check, 
-  Calendar, FileDown, Lock, ArrowLeft
+  ArrowRight, 
+  Menu, 
+  X, 
+  Fingerprint, 
+  Zap, 
+  Layers, 
+  Cpu, 
+  Anchor, 
+  Target, 
+  Box, 
+  Share2, 
+  Play,
+  Terminal,
+  FileText,
+  CheckCircle2,
+  ChevronRight,
+  MessageSquare,
+  Check,
+  Calendar,
+  Download,
+  Loader2,
+  ArrowLeft,
+  FileDown,
+  Lock
 } from 'lucide-react';
 
 /**
  * --- DATA: SUB-TOPIC CONTENT ---
  */
-const TOPIC_DATA: Record<string, any> = {
+const TOPIC_DATA = {
+  // CLARITY MODULES
   "self-clarity": {
     title: "Self-Clarity Protocol",
     subtitle: "Module 1.1: Identity Architecture",
@@ -57,6 +79,8 @@ const TOPIC_DATA: Record<string, any> = {
     ],
     outcome: "A reliable daily system that ensures progress regardless of motivation levels."
   },
+
+  // CREATIVE MODULES
   "divergent-thinking": {
     title: "Divergent Thinking",
     subtitle: "Module 2.1: Ideation Engine",
@@ -108,19 +132,20 @@ const TOPIC_DATA: Record<string, any> = {
 };
 
 /**
- * --- UTILS ---
+ * --- ANIMATION UTILS ---
  */
-const Reveal = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => {
+
+const Reveal = ({ children, delay = 0, className = "" }) => {
   const [visible, setVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         setVisible(true);
-        observer.unobserve(entry.target);
+        observer.unobserve(entry.target); 
       }
-    }, { threshold: 0.1 });
+    }, { threshold: 0.1 }); 
     if (ref.current) observer.observe(ref.current);
     return () => { if (ref.current) observer.unobserve(ref.current); };
   }, []);
@@ -128,7 +153,11 @@ const Reveal = ({ children, delay = 0, className = "" }: { children: React.React
   return (
     <div 
       ref={ref} 
-      className={`transform transition-all duration-700 ease-out ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"} ${className}`} 
+      className={`transform transition-all duration-700 ease-out ${
+        visible 
+          ? "opacity-100 translate-y-0" 
+          : "opacity-0 translate-y-8"
+      } ${className}`} 
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
@@ -136,15 +165,16 @@ const Reveal = ({ children, delay = 0, className = "" }: { children: React.React
   );
 };
 
-const Button = ({ children, variant = "primary", className = "", icon: Icon, onClick, disabled = false }: any) => {
-  const styles: any = {
-    primary: "bg-white text-black hover:bg-neutral-200 border border-transparent shadow-[0px_2px_0px_0px_rgba(255,255,255,0.5)] disabled:opacity-50",
+const Button = ({ children, variant = "primary", className = "", icon: Icon, onClick, type = "button", disabled = false }) => {
+  const styles = {
+    primary: "bg-white text-black hover:bg-neutral-200 border border-transparent shadow-[0px_2px_0px_0px_rgba(255,255,255,0.5)] disabled:opacity-50 disabled:cursor-not-allowed",
     secondary: "bg-transparent text-white border border-neutral-700 hover:bg-neutral-900 disabled:opacity-50",
     ghost: "bg-transparent text-neutral-400 hover:text-white border-transparent"
   };
 
   return (
     <button 
+      type={type}
       onClick={onClick}
       disabled={disabled}
       className={`px-6 py-3 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 group active:translate-y-0.5 ${styles[variant]} ${className}`}
@@ -156,14 +186,15 @@ const Button = ({ children, variant = "primary", className = "", icon: Icon, onC
 };
 
 /**
- * --- MODALS ---
+ * --- MODALS & SUB-PAGES ---
  */
-const DeployModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+
+const DeployModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className="relative bg-neutral-900 w-full max-w-4xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl animate-fade-in duration-300 border border-white/10 flex flex-col">
+      <div className="relative bg-neutral-900 w-full max-w-4xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-300 border border-white/10 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b border-white/10 bg-black">
            <div className="flex items-center gap-2 text-white">
              <Terminal size={16} />
@@ -178,8 +209,11 @@ const DeployModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void
             src="https://docs.google.com/forms/d/e/1FAIpQLScVqOcJpZ__TXaxCAcFfG20RlWJ1XmaoM_dlSzA9w2eVroEWQ/viewform?embedded=true" 
             width="100%" 
             height="100%" 
-            className="border-none"
+            frameBorder="0" 
+            marginHeight="0" 
+            marginWidth="0"
             title="Deploy Form"
+            sandbox="allow-scripts allow-popups allow-forms allow-same-origin"
           >
             Loading system interface...
           </iframe>
@@ -189,12 +223,12 @@ const DeployModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void
   );
 };
 
-const CalendlyModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+const CalendlyModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
        <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-       <div className="relative bg-white w-full max-w-5xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl animate-fade-in duration-500 flex flex-col">
+       <div className="relative bg-white w-full max-w-5xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl animate-in slide-in-from-bottom-10 duration-500 flex flex-col">
          <div className="flex justify-between items-center p-4 bg-black border-b border-white/10 text-white">
             <div className="flex items-center gap-2">
               <Calendar size={16} />
@@ -209,8 +243,9 @@ const CalendlyModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
               src="https://calendly.com/ninedreamsss/30min" 
               width="100%" 
               height="100%" 
-              className="border-none"
+              frameBorder="0"
               title="Calendly Scheduling"
+              sandbox="allow-scripts allow-popups allow-forms allow-same-origin"
             ></iframe>
          </div>
        </div>
@@ -218,15 +253,13 @@ const CalendlyModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
   );
 };
 
-/**
- * --- PAGES ---
- */
-const TopicDetailPage = ({ topicId, onBack, isExiting }: { topicId: string, onBack: () => void, isExiting: boolean }) => {
+// SUB-PAGE: TOPIC DETAIL
+const TopicDetailPage = ({ topicId, onBack }) => {
   const data = TOPIC_DATA[topicId];
   if (!data) return null;
 
   return (
-    <div className={`min-h-screen bg-black pt-24 pb-12 ${isExiting ? 'animate-slide-out-right' : 'animate-slide-in-right'}`}>
+    <div className="min-h-screen bg-black pt-24 pb-12 animate-in slide-in-from-right duration-700 ease-[0.22,1,0.36,1]">
       <div className="max-w-4xl mx-auto px-6">
         <button onClick={onBack} className="flex items-center gap-2 text-neutral-500 hover:text-white mb-12 transition-colors font-mono text-xs uppercase tracking-widest group">
           <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform"/> Return to Dashboard
@@ -242,7 +275,7 @@ const TopicDetailPage = ({ topicId, onBack, isExiting }: { topicId: string, onBa
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {data.points.map((point: any, i: number) => (
+          {data.points.map((point, i) => (
             <div key={i} className="bg-neutral-900/50 border border-white/10 p-8 rounded-xl hover:border-white/30 transition-colors">
               <div className="text-white font-bold mb-3 flex items-center gap-2">
                 <span className="text-neutral-600 font-mono text-xs">0{i+1}</span>
@@ -267,19 +300,22 @@ const TopicDetailPage = ({ topicId, onBack, isExiting }: { topicId: string, onBa
   );
 };
 
-const DownloadPage = ({ onBack, isExiting }: { onBack: () => void, isExiting: boolean }) => {
+// DOWNLOAD PAGE
+const DownloadPage = ({ onBack }) => {
+  // Using the new Google Drive ID from your link: 1j8RZEQ7nXJNe4vivE9UQ7whvc0h5F2iL
   const driveEmbedUrl = "https://drive.google.com/file/d/1j8RZEQ7nXJNe4vivE9UQ7whvc0h5F2iL/preview"; 
   const directDownloadUrl = "https://drive.google.com/uc?export=download&id=1j8RZEQ7nXJNe4vivE9UQ7whvc0h5F2iL";
 
   return (
-    <div className={`min-h-screen bg-black pt-24 pb-12 ${isExiting ? 'animate-slide-out-right' : 'animate-slide-in-right'}`}>
+    <div className="min-h-screen bg-black pt-24 pb-12 animate-in slide-in-from-right duration-700 ease-[0.22,1,0.36,1]">
       <div className="max-w-6xl mx-auto px-6">
         <button onClick={onBack} className="flex items-center gap-2 text-neutral-500 hover:text-white mb-8 transition-colors group">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform"/> Return to System
         </button>
         
-        <div className="grid lg:grid-cols-12 gap-12 h-[calc(100vh-200px)] min-h-[600px]">
+        <div className="grid lg:grid-cols-12 gap-12 h-[calc(100vh-200px)]">
           
+          {/* Left: Content & Context */}
           <div className="lg:col-span-4 flex flex-col justify-between">
             <div className="space-y-8">
               <div>
@@ -306,7 +342,12 @@ const DownloadPage = ({ onBack, isExiting }: { onBack: () => void, isExiting: bo
             </div>
 
             <div className="mt-8">
-               <a href={directDownloadUrl} target="_blank" rel="noopener noreferrer" className="block w-full">
+               <a 
+                 href={directDownloadUrl}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="block w-full"
+               >
                  <Button variant="primary" className="w-full justify-center" icon={FileDown}>
                    Direct Download (PDF)
                  </Button>
@@ -315,8 +356,9 @@ const DownloadPage = ({ onBack, isExiting }: { onBack: () => void, isExiting: bo
             </div>
           </div>
 
+          {/* Right: Google Drive Embed */}
           <div className="lg:col-span-8 h-full bg-neutral-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative">
-             <div className="absolute top-0 w-full h-10 bg-black border-b border-white/10 flex items-center px-4 gap-2 z-10">
+             <div className="absolute top-0 w-full h-10 bg-black border-b border-white/10 flex items-center px-4 gap-2">
                <div className="flex gap-1.5">
                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/20"></div>
                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20"></div>
@@ -326,12 +368,15 @@ const DownloadPage = ({ onBack, isExiting }: { onBack: () => void, isExiting: bo
                  <Lock size={8} /> terminal_v2.pdf
                </div>
              </div>
+             {/* IFRAME FOR GOOGLE DRIVE PREVIEW */}
              <iframe 
                src={driveEmbedUrl}
                width="100%" 
                height="100%" 
-               className="pt-10 w-full h-full"
+               className="pt-10"
+               allow="autoplay"
                title="PDF Viewer"
+               sandbox="allow-scripts allow-popups allow-forms allow-same-origin"
              ></iframe>
           </div>
 
@@ -341,9 +386,9 @@ const DownloadPage = ({ onBack, isExiting }: { onBack: () => void, isExiting: bo
   );
 };
 
-const FilmPage = ({ onBack, isExiting }: { onBack: () => void, isExiting: boolean }) => {
+const FilmPage = ({ onBack }) => {
   return (
-    <div className={`min-h-screen bg-black flex flex-col ${isExiting ? 'animate-slide-out-right' : 'animate-slide-in-right'}`}>
+    <div className="min-h-screen bg-black flex flex-col animate-in slide-in-from-right duration-700 ease-[0.22,1,0.36,1]">
       <div className="absolute top-0 w-full z-20 p-6 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent">
         <button onClick={onBack} className="flex items-center gap-2 text-white/70 hover:text-white transition-colors bg-black/50 px-4 py-2 rounded-full backdrop-blur-md">
            <ArrowLeft size={16} /> Exit Theater Mode
@@ -366,17 +411,25 @@ const FilmPage = ({ onBack, isExiting }: { onBack: () => void, isExiting: boolea
            </div>
         </div>
       </div>
+      <div className="p-12 border-t border-white/10 bg-neutral-950 relative z-10">
+         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div><h3 className="text-white font-bold text-lg">Ready to complete the human?</h3><p className="text-neutral-500 text-sm">Join the 500+ schools transforming education.</p></div>
+            <Button variant="primary" icon={ArrowRight}>Deploy System</Button>
+         </div>
+      </div>
     </div>
   );
 };
 
+
 /**
- * --- COMPONENTS FOR HOME ---
+ * --- SECTIONS (MAIN PAGE) ---
  */
-const Navbar = ({ onDeploy, onDownload }: any) => (
+
+const Navbar = ({ onDeploy, onDownload, onViewChange }) => (
   <nav className="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-white/10">
     <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
-      <button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} className="flex items-center gap-2">
+      <button onClick={() => onViewChange('home')} className="flex items-center gap-2">
         <div className="w-5 h-5 bg-white rounded-sm flex items-center justify-center">
           <Terminal size={12} className="text-black" />
         </div>
@@ -398,7 +451,7 @@ const Navbar = ({ onDeploy, onDownload }: any) => (
   </nav>
 );
 
-const Hero = ({ onDeploy, onWatch, onDownload }: any) => (
+const Hero = ({ onDeploy, onWatch, onDownload }) => (
   <section className="relative min-h-[85vh] flex flex-col justify-center bg-black pt-20 border-b border-white/10 overflow-hidden">
     <div className="relative z-10 max-w-5xl mx-auto px-6 w-full text-center pb-20">
       <Reveal>
@@ -419,7 +472,7 @@ const Hero = ({ onDeploy, onWatch, onDownload }: any) => (
           <p className="text-lg text-neutral-300 font-light leading-relaxed font-mono text-sm">
             {'>'} Initializing clarity protocols... <br/>
             {'>'} Loading creativity engine... <br/>
-            {'>'} <span className="text-white">Education builds the hardware. We code the software.</span>
+            {'>'} <span className="text-white">Education builds the hardware. We code the software (Identity, Confidence, Capability).</span>
           </p>
         </div>
       </Reveal>
@@ -433,7 +486,7 @@ const Hero = ({ onDeploy, onWatch, onDownload }: any) => (
       </Reveal>
     </div>
 
-    <div className="absolute bottom-0 w-full border-t border-white/10 bg-neutral-950/50 backdrop-blur-sm py-3 z-0 overflow-hidden">
+    <div className="absolute bottom-0 w-full border-t border-white/10 bg-neutral-950/50 backdrop-blur-sm py-3 z-0">
       <div className="flex gap-12 whitespace-nowrap animate-marquee text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
          <span>/// SYSTEM STATUS: OPTIMAL</span>
          <span>/// LATENCY: 0MS</span>
@@ -444,12 +497,11 @@ const Hero = ({ onDeploy, onWatch, onDownload }: any) => (
          <span>/// LATENCY: 0MS</span>
          <span>/// CLARITY CORE: ONLINE</span>
       </div>
-      <style>{`@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } } .animate-marquee { animation: marquee 40s linear infinite; }`}</style>
     </div>
   </section>
 );
 
-const ClarityModule = ({ onSelectTopic }: { onSelectTopic: (id: string) => void }) => {
+const ClarityModule = ({ onSelectTopic }) => {
   const layers = [
     { id: "self-clarity", title: "Layer 1: Self-Clarity", sub: "The Mirror", desc: "Helping students map their internal architecture. We audit strengths, values, and personality so they can lead themselves.", icon: Fingerprint },
     { id: "thought-clarity", title: "Layer 2: Thought Clarity", sub: "The Processor", desc: "Teaching students how to process data, not just store it. We introduce frameworks for clear, logical decision making.", icon: Cpu },
@@ -499,7 +551,7 @@ const ClarityModule = ({ onSelectTopic }: { onSelectTopic: (id: string) => void 
   );
 };
 
-const CreativeModule = ({ onSelectTopic }: { onSelectTopic: (id: string) => void }) => {
+const CreativeModule = ({ onSelectTopic }) => {
   const items = [
     { id: "divergent-thinking", title: "Divergent Thinking", tags: ["Curiosity", "Ideation"], desc: "Breaking rigid neural pathways to solve non-linear problems." },
     { id: "structural-planning", title: "Structural Planning", tags: ["Logic", "Architecture"], desc: "Converting abstract concepts into executable blueprints." },
@@ -537,10 +589,9 @@ const CreativeModule = ({ onSelectTopic }: { onSelectTopic: (id: string) => void
   );
 };
 
-const CustomTracksConfigurator = ({ onDeploy }: any) => {
+const CustomTracksConfigurator = ({ onDeploy }) => {
   const [selectedPlugin, setSelectedPlugin] = useState("Python & AI Logic");
-  // Removed "Robotics & Electronics" as requested
-  const plugins = ["Python & AI Logic", "Financial Literacy & Markets", "Public Speaking & Debate", "Startup Entrepreneurship", "Video Editing & Content"];
+  const plugins = ["Python & AI Logic", "Financial Literacy & Markets", "Public Speaking & Debate", "Startup Entrepreneurship", "Video Editing & Content", "Robotics & Electronics"];
   return (
     <section id="plugins" className="py-32 bg-black border-t border-white/10">
       <div className="max-w-4xl mx-auto px-6">
@@ -591,7 +642,7 @@ const Testimonials = () => (
   </section>
 );
 
-const Footer = ({ onDeploy, onBookCall }: any) => (
+const Footer = ({ onDeploy, onBookCall }) => (
   <footer className="bg-neutral-950 py-24 border-t border-white/10 text-sm">
     <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
       <div className="md:col-span-2">
@@ -606,65 +657,50 @@ const Footer = ({ onDeploy, onBookCall }: any) => (
   </footer>
 );
 
-// --- MAIN APP ENTRY ---
+// --- MAIN APP ---
 const App = () => {
   const [view, setView] = useState('home'); // 'home', 'download', 'film', 'topic:id'
   const [showDeploy, setShowDeploy] = useState(false);
   const [showCalendly, setShowCalendly] = useState(false);
-  
-  // Ref to store scroll position when leaving home
-  const scrollRef = useRef(0);
-  
-  // Exit State for Sub-Pages
-  const [isExiting, setIsExiting] = useState(false);
-  
-  // Transition logic
-  const [homeTransition, setHomeTransition] = useState("animate-fade-in");
+  const scrollRef = useRef(0); 
+  const [homeTransition, setHomeTransition] = useState("animate-in fade-in duration-700 ease-out"); // Default initial
 
-  const handleViewChange = (newView: string) => {
-    // 1. Navigate TO Subpage (Home -> Sub)
+  const handleViewChange = (newView) => {
     if (view === 'home' && newView !== 'home') {
-      scrollRef.current = window.scrollY;
-      setHomeTransition("animate-slide-in-left"); // Prepare for return (Home will slide in from left)
-      setView(newView);
-      window.scrollTo(0, 0);
-    } 
-    // 2. Navigate TO Home (Sub -> Home)
-    else if (view !== 'home' && newView === 'home') {
-      setIsExiting(true); // Trigger exit animation
-      
-      // Wait for animation (500ms)
-      setTimeout(() => {
-        setIsExiting(false);
-        setView('home');
-        // Restore scroll position instantly
-        setTimeout(() => window.scrollTo({top: scrollRef.current, behavior: 'auto'}), 0);
-      }, 500);
+      if (typeof window !== 'undefined') {
+        scrollRef.current = window.scrollY;
+      }
+      // Prepare home to slide in from left when returning
+      setHomeTransition("animate-in slide-in-from-left duration-700 ease-[0.22,1,0.36,1]"); 
     }
-    // 3. Sub -> Sub (Immediate)
-    else {
-      setView(newView);
-      window.scrollTo(0, 0);
+    setView(newView);
+    
+    if (typeof window !== 'undefined') {
+      if (newView === 'home') {
+        setTimeout(() => window.scrollTo(0, scrollRef.current), 0);
+      } else {
+        window.scrollTo(0, 0); 
+      }
     }
   };
 
-  // Render Sub-Pages
-  if (view === 'download') return <DownloadPage onBack={() => handleViewChange('home')} isExiting={isExiting} />;
-  if (view === 'film') return <FilmPage onBack={() => handleViewChange('home')} isExiting={isExiting} />;
+  if (view === 'download') return <DownloadPage onBack={() => handleViewChange('home')} />;
+  if (view === 'film') return <FilmPage onBack={() => handleViewChange('home')} />;
   if (view.startsWith('topic:')) {
     const topicId = view.split(':')[1];
-    return <TopicDetailPage topicId={topicId} onBack={() => handleViewChange('home')} isExiting={isExiting} />;
+    return <TopicDetailPage topicId={topicId} onBack={() => handleViewChange('home')} />;
   }
 
-  // Render Home
+  // Home View
   return (
     <div className={`bg-black min-h-screen text-white font-sans antialiased selection:bg-neutral-800 selection:text-white ${homeTransition}`}>
       <div className="fixed inset-0 pointer-events-none opacity-[0.02] z-[100]" style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: '40px 40px' }}></div>
-      
+      <style>{`@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } } .animate-marquee { animation: marquee 40s linear infinite; } html { scroll-behavior: smooth; }`}</style>
+
       <DeployModal isOpen={showDeploy} onClose={() => setShowDeploy(false)} />
       <CalendlyModal isOpen={showCalendly} onClose={() => setShowCalendly(false)} />
 
-      <Navbar onDeploy={() => setShowDeploy(true)} onDownload={() => handleViewChange('download')} />
+      <Navbar onDeploy={() => setShowDeploy(true)} onDownload={() => handleViewChange('download')} onViewChange={handleViewChange} />
       <Hero onDeploy={() => setShowDeploy(true)} onWatch={() => handleViewChange('film')} onDownload={() => handleViewChange('download')} />
       <ClarityModule onSelectTopic={(id) => handleViewChange(`topic:${id}`)} />
       <CreativeModule onSelectTopic={(id) => handleViewChange(`topic:${id}`)} />
