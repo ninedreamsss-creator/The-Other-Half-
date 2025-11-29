@@ -16,8 +16,9 @@ export default defineConfig(({ mode }) => {
       },
       resolve: {
         alias: {
-          '@': path.resolve(__dirname, '.'),
+          '@': path.resolve(__dirname, './src'),
         }
-      }
+      },
+      base: '/', // Ensure base path is explicitly set to root
     };
 });
