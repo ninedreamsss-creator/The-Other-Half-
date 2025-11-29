@@ -145,7 +145,7 @@ const Reveal = ({ children, delay = 0, className = "" }) => {
         setVisible(true);
         observer.unobserve(entry.target); 
       }
-    }, { threshold: 0.1 }); 
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
     if (ref.current) observer.observe(ref.current);
     return () => { if (ref.current) observer.unobserve(ref.current); };
   }, []);
@@ -153,7 +153,7 @@ const Reveal = ({ children, delay = 0, className = "" }) => {
   return (
     <div 
       ref={ref} 
-      className={`transform transition-all duration-700 ease-out ${
+      className={`transform transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-transform ${
         visible 
           ? "opacity-100 translate-y-0" 
           : "opacity-0 translate-y-8"
@@ -177,7 +177,7 @@ const Button = ({ children, variant = "primary", className = "", icon: Icon, onC
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`px-6 py-3 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 group active:translate-y-0.5 ${styles[variant]} ${className}`}
+      className={`px-6 py-3 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 group active:scale-[0.98] ${styles[variant]} ${className}`}
     >
       {children}
       {Icon && <Icon size={16} className="transition-transform duration-300 group-hover:translate-x-1" />}
@@ -193,8 +193,8 @@ const DeployModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className="relative bg-neutral-900 w-full max-w-4xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-300 border border-white/10 flex flex-col">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md animate-in fade-in duration-300" onClick={onClose} />
+      <div className="relative bg-neutral-900 w-full max-w-4xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 border border-white/10 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b border-white/10 bg-black">
            <div className="flex items-center gap-2 text-white">
              <Terminal size={16} />
@@ -227,8 +227,8 @@ const CalendlyModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-       <div className="relative bg-white w-full max-w-5xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl animate-in slide-in-from-bottom-10 duration-500 flex flex-col">
+       <div className="absolute inset-0 bg-black/90 backdrop-blur-md animate-in fade-in duration-300" onClick={onClose} />
+       <div className="relative bg-white w-full max-w-5xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col">
          <div className="flex justify-between items-center p-4 bg-black border-b border-white/10 text-white">
             <div className="flex items-center gap-2">
               <Calendar size={16} />
@@ -259,13 +259,13 @@ const TopicDetailPage = ({ topicId, onBack }) => {
   if (!data) return null;
 
   return (
-    <div className="min-h-screen bg-black pt-24 pb-12 animate-in slide-in-from-right duration-700 ease-[0.22,1,0.36,1]">
+    <div className="min-h-screen bg-black pt-24 pb-12 animate-in slide-in-from-right duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
       <div className="max-w-4xl mx-auto px-6">
         <button onClick={onBack} className="flex items-center gap-2 text-neutral-500 hover:text-white mb-12 transition-colors font-mono text-xs uppercase tracking-widest group">
           <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform"/> Return to Dashboard
         </button>
 
-        <div className="border-l-2 border-white/10 pl-8 mb-16">
+        <div className="border-l-2 border-white/10 pl-8 mb-16 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 fill-mode-forwards">
           <div className="flex items-center gap-3 mb-4 text-green-500 font-mono text-xs uppercase tracking-widest">
              <data.icon size={16} />
              {data.subtitle}
@@ -276,7 +276,7 @@ const TopicDetailPage = ({ topicId, onBack }) => {
 
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           {data.points.map((point, i) => (
-            <div key={i} className="bg-neutral-900/50 border border-white/10 p-8 rounded-xl hover:border-white/30 transition-colors">
+            <div key={i} className="bg-neutral-900/50 border border-white/10 p-8 rounded-xl hover:border-white/30 transition-colors animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-forwards" style={{animationDelay: `${i * 100 + 300}ms`}}>
               <div className="text-white font-bold mb-3 flex items-center gap-2">
                 <span className="text-neutral-600 font-mono text-xs">0{i+1}</span>
                 {point.head}
@@ -286,7 +286,7 @@ const TopicDetailPage = ({ topicId, onBack }) => {
           ))}
         </div>
 
-        <div className="bg-white/5 border border-white/10 rounded-xl p-8 flex items-center gap-6">
+        <div className="bg-white/5 border border-white/10 rounded-xl p-8 flex items-center gap-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-700 fill-mode-forwards">
            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shrink-0">
              <Check className="text-black" size={24} />
            </div>
@@ -302,12 +302,11 @@ const TopicDetailPage = ({ topicId, onBack }) => {
 
 // DOWNLOAD PAGE
 const DownloadPage = ({ onBack }) => {
-  // Using the new Google Drive ID from your link: 1j8RZEQ7nXJNe4vivE9UQ7whvc0h5F2iL
   const driveEmbedUrl = "https://drive.google.com/file/d/1j8RZEQ7nXJNe4vivE9UQ7whvc0h5F2iL/preview"; 
   const directDownloadUrl = "https://drive.google.com/uc?export=download&id=1j8RZEQ7nXJNe4vivE9UQ7whvc0h5F2iL";
 
   return (
-    <div className="min-h-screen bg-black pt-24 pb-12 animate-in slide-in-from-right duration-700 ease-[0.22,1,0.36,1]">
+    <div className="min-h-screen bg-black pt-24 pb-12 animate-in slide-in-from-right duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
       <div className="max-w-6xl mx-auto px-6">
         <button onClick={onBack} className="flex items-center gap-2 text-neutral-500 hover:text-white mb-8 transition-colors group">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform"/> Return to System
@@ -388,7 +387,7 @@ const DownloadPage = ({ onBack }) => {
 
 const FilmPage = ({ onBack }) => {
   return (
-    <div className="min-h-screen bg-black flex flex-col animate-in slide-in-from-right duration-700 ease-[0.22,1,0.36,1]">
+    <div className="min-h-screen bg-black flex flex-col animate-in slide-in-from-right duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
       <div className="absolute top-0 w-full z-20 p-6 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent">
         <button onClick={onBack} className="flex items-center gap-2 text-white/70 hover:text-white transition-colors bg-black/50 px-4 py-2 rounded-full backdrop-blur-md">
            <ArrowLeft size={16} /> Exit Theater Mode
@@ -671,7 +670,7 @@ const App = () => {
         scrollRef.current = window.scrollY;
       }
       // Prepare home to slide in from left when returning
-      setHomeTransition("animate-in slide-in-from-left duration-700 ease-[0.22,1,0.36,1]"); 
+      setHomeTransition("animate-in slide-in-from-left duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]");
     }
     setView(newView);
     
